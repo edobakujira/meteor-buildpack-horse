@@ -23,15 +23,6 @@ export_env_dir() {
   fi
 }
 
-echo "-----> Listing HEROKU_ environment variables"
-echo "HEROKU_APP_ID:           $HEROKU_APP_ID"
-echo "HEROKU_APP_NAME:         $HEROKU_APP_NAME"
-echo "HEROKU_DYNO_ID:          $HEROKU_DYNO_ID"
-echo "HEROKU_RELEASE_VERSION:  $HEROKU_RELEASE_VERSION"
-echo "HEROKU_SLUG_COMMIT:      $HEROKU_SLUG_COMMIT"
-echo "HEROKU_SLUG_DESCRIPTION: $HEROKU_SLUG_DESCRIPTION"
-
-
 echo "-----> Listing VCAP_ environment variables"
 echo "VCAP_APPLICATION: $VCAP_APPLICATION"
 echo "ROOT_URL:         $ROOT_URL"
@@ -204,8 +195,6 @@ if [ -n "${BUILDPACK_PRELAUNCH_METEOR+1}" ]; then
   # Remove the Android platform because it fails due to the Android tools not
   # being installed, but leave the iOS platform because it's ignored.
   METEOR remove-platform android || true
-  ls -lah $METEOR_DIR/.meteor/meteor
-  ls -lah
   cat ./settings.json
 
   #Bluemix erro starts here i guess?
@@ -220,7 +209,9 @@ fi
 # binary dependencies, additional environment settings, etc.
 echo "-----> Running before bundling"
 for file in `ls "$BUILDPACK_DIR"/before | sort`; do
+  echo "$BUILDPACK_DIR"/before/$file
   . "$BUILDPACK_DIR"/before/$file
+  cat "$BUILDPACK_DIR"/before/$file
 done
 
 # Now on to bundling. Don't put the bundle in $APP_CHECKOUT_DIR during
